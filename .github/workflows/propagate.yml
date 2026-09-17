@@ -23,8 +23,8 @@ jobs:
     steps:
       - name: Fetch latest master code
         run: |
-          git clone --branch main --depth 1 \
-            "https://x-access-token:${{ secrets.CLONE_PUSH_TOKEN }}@github.com/${MASTER_REPO}.git" master
+          git clone --branch main \
+              "https://x-access-token:${{ secrets.CLONE_PUSH_TOKEN }}@github.com/${MASTER_REPO}.git" master
 
       - name: Mirror master main into each clone repo
         working-directory: master
