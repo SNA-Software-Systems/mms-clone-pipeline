@@ -1,6 +1,6 @@
 name: Propagate master to clones
 
-on:
+"on":
   schedule:
     - cron: "*/30 * * * *"   # every 30 minutes — adjust to taste
   workflow_dispatch: {}      # adds a manual "Run workflow" button
@@ -11,11 +11,11 @@ env:
   # Clone repositories (owner/name), one per line — same order as the app IDs below.
   # ADDING A NEW CLONE = add one line here and one app ID below. Nothing else.
   CLONE_REPOS: |
-   SNA-Software-Systems/lee-arnold-memorials
+     SNA-Software-Systems/lee-arnold-memorials
   
   # Base44 app IDs of the clone apps, same order as the repos above
   CLONE_APP_IDS: |
-    6aaba3296fec22ad6f728008
+     6aaba3296fec22ad6f728008
 
 jobs:
   propagate:
