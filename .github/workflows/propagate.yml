@@ -1,1 +1,61 @@
+name: Propagate master to clones
 
+on:
+  schedule:
+    - cron: "*/30 * * * *"   # every 30 minutes — adjust to taste
+  workflow_dispatch: {}      # adds a manual "Run workflow" button
+
+env:
+  # The master app's repository, as owner/name
+  MASTER_REPO: "SNA-Software-Systems/memorial-management-system"
+  # Clone repositories (owner/name), one per line — same order as the app IDs below.
+  # ADDING A NEW CLONE = add one line here and one app ID below. Nothing else.
+  CLONE_REPOS: |
+   SNA-Software-Systems/lee-arnold-memorials
+  
+  # Base44 app IDs of the clone apps, same order as the repos above
+  CLONE_APP_IDS: |
+    6aaba3296fec22ad6f728008
+
+jobs:
+  propagate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch latest master code
+        run: |
+          git clone --branch main --depth 1 \
+            "https://x-access-token:${{ secrets.CLONE_PUSH_TOKEN }}@github.com/${MASTER_REPO}.git" master
+
+      - name: Mirror master main into each clone repo
+        working-directory: master
+        run: |
+          while IFS= read -r repo; do
+            [ -z "$repo" ] && continue
+            echo ">> Mirroring to ${repo}"
+            git push --force \
+              "https://x-access-token:${{ secrets.CLONE_PUSH_TOKEN }}@github.com/${repo}.git" \
+              HEAD:main
+          done <<< "${CLONE_REPOS}"
+
+      - name: Pull and publish each clone app on Base44
+        run: |
+          mapfile -t repos <<< "${CLONE_REPOS}"
+          mapfile -t ids  <<< "${CLONE_APP_IDS}"
+          for i in "${!repos[@]}"; do
+            repo="$(echo "${repos[$i]}" | tr -d '[:space:]')"
+            app_id="$(echo "${ids[$i]}"  | tr -d '[:space:]')"
+            [ -z "$repo" ] && continue
+            echo ">> Pulling GitHub changes into ${repo} (app ${app_id})"
+            sync_resp=$(curl -sS -X POST \
+              -H "Authorization: Bearer ${{ secrets.BASE44_API_TOKEN }}" \
+              "https://app.base44.com/api/apps/${app_id}/github/sync")
+            echo "   ${sync_resp}"
+            if echo "${sync_resp}" | grep -q '"synced"[[:space:]]*:[[:space:]]*true'; then
+              echo ">> Publishing ${repo}"
+              curl -sS -X POST \
+                -H "Authorization: Bearer ${{ secrets.BASE44_API_TOKEN }}" \
+                "https://app.base44.com/api/apps/${app_id}/deploy"
+            else
+              echo "!! Pull did not report success for ${repo} — clone NOT published. See response above."
+            fi
+          done
