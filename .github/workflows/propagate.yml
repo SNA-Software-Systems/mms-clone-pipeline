@@ -37,7 +37,7 @@ jobs:
               HEAD:main
           done <<< "${CLONE_REPOS}"
 
-      - name: Pull and publish each clone app on Base44
+     - name: Pull and publish each clone app on Base44
         run: |
           mapfile -t repos <<< "${CLONE_REPOS}"
           mapfile -t ids  <<< "${CLONE_APP_IDS}"
@@ -50,12 +50,15 @@ jobs:
               -H "Authorization: Bearer ${{ secrets.BASE44_API_TOKEN }}" \
               "https://app.base44.com/api/apps/${app_id}/github/sync")
             echo "   ${sync_resp}"
-            if echo "${sync_resp}" | grep -q '"synced"[[:space:]]*:[[:space:]]*true'; then
-              echo ">> Publishing ${repo}"
+            if echo "${sync_resp}" | grep -q '"error"[[:space:]]*:[[:space:]]*null'; then
+              if echo "${sync_resp}" | grep -q '"already_up_to_date"[[:space:]]*:[[:space:]]*true'; then
+                echo ">> ${repo} already up to date — publishing anyway."
+              else
+                echo ">> New commits pulled into ${repo} — publishing."
+              fi
               curl -sS -X POST \
                 -H "Authorization: Bearer ${{ secrets.BASE44_API_TOKEN }}" \
                 "https://app.base44.com/api/apps/${app_id}/deploy"
             else
-              echo "!! Pull did not report success for ${repo} — clone NOT published. See response above."
+              echo "!! Pull reported an error for ${repo} — clone NOT published. See response above."
             fi
-          done
