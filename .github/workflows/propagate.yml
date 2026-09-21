@@ -12,10 +12,12 @@ env:
   # ADDING A NEW CLONE = add one line here and one app ID below. Nothing else.
   CLONE_REPOS: |
      SNA-Software-Systems/lee-arnold-memorials
+     SNA-Software-Systems/Stonewriters
   
   # Base44 app IDs of the clone apps, same order as the repos above
   CLONE_APP_IDS: |
      6aaba3296fec22ad6f728008
+     6ab1251b4ebaddc10000deb2
 
 jobs:
   propagate:
