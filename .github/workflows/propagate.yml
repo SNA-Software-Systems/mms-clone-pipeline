@@ -13,11 +13,13 @@ env:
   CLONE_REPOS: |
      SNA-Software-Systems/lee-arnold-memorials
      SNA-Software-Systems/Stonewriters
+     SNA-Software-Systems/Eden
   
   # Base44 app IDs of the clone apps, same order as the repos above
   CLONE_APP_IDS: |
      6aaba3296fec22ad6f728008
      6ab1251b4ebaddc10000deb2
+     6ab394e6b4e973950a5fcec0
 
 jobs:
   propagate:
