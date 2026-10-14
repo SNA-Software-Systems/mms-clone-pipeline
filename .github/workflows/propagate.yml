@@ -15,6 +15,7 @@ env:
      SNA-Software-Systems/stonewriters-memorials
      SNA-Software-Systems/Eden-memorials
      SNA-Software-Systems/j-day-memorial-management-system
+     SNA-Software-Systems/barnes-memorials
      
   # Base44 app IDs of the clone apps, same order as the repos above
   CLONE_APP_IDS: |
@@ -22,7 +23,7 @@ env:
      6ab1251b4ebaddc10000deb2
      6ab394e6b4e973950a5fcec0
      6ac3a4e2e1c9e1c63829db7b
-
+     6ac3836baa6e960b59105e79
 
 jobs:
   propagate:
