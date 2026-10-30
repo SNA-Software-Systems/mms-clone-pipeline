@@ -17,6 +17,7 @@ env:
      SNA-Software-Systems/j-day-memorial-management-system
      SNA-Software-Systems/barnes-memorials
      SNA-Software-Systems/memorial-management-system-demonstration-copy
+     SNA-Software-Systems/allerton.memorial.services.ltd
      
   # Base44 app IDs of the clone apps, same order as the repos above
   CLONE_APP_IDS: |
@@ -26,6 +27,7 @@ env:
      6ac3a4e2e1c9e1c63829db7b
      6ac3836baa6e960b59105e79
      6ad5f0a9587fa9daa22fc410
+     6ae46d0bf491c700dbfad4ee
      
 jobs:
   propagate:
